@@ -21,16 +21,17 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// 1. Efficiency: Gzip Compression
-app.use(compression());
-
-// 2. Security: Parameter Pollution & XSS
-app.use(hpp());
-app.use(xss());
-
 const PORT = process.env.PORT || 3000;
 
-// Security Middleware (Helmet)
+// Basic Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Efficiency: Gzip Compression
+app.use(compression());
+
+// Security Middleware
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -47,9 +48,6 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// Middleware
-app.use(cors());
-app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Routes

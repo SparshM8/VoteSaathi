@@ -1,0 +1,30 @@
+{
+  "name": "VoteSaathi",
+  "short_name": "VoteSaathi",
+  "description": "The AI Intelligence Layer of Modern Democracy",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060608",
+  "theme_color": "#2ed573",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["education", "government", "utilities"],
+  "screenshots": [
+    {
+      "src": "/assets/screenshot.png",
+      "sizes": "1280x720",
+      "type": "image/png"
+    }
+  ]
+}

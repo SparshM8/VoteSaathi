@@ -3,25 +3,30 @@
 //  VoteSaathi | Google Services Score Booster
 // ══════════════════════════════════════════════
 
-// Real Firebase Config — VoteSaathi Project
-const firebaseConfig = {
-  apiKey: "AIzaSyCdNVrVnXQhzh6ZaAWcDLsPtTkEnGNvxBc",
-  authDomain: "august-craft-453617-j1.firebaseapp.com",
-  projectId: "august-craft-453617-j1",
-  storageBucket: "august-craft-453617-j1.firebasestorage.app",
-  messagingSenderId: "206286072146",
-  appId: "1:206286072146:web:8b9f120c5dc6342b7ab28b"
+let auth, db;
+
+// ── INITIALIZE (Securely) ─────────────────────
+const initFirebase = async () => {
+  try {
+    const res = await fetch('/api/config/firebase');
+    const firebaseConfig = await res.json();
+
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+
+    // Re-trigger auth state check
+    setupAuthListeners();
+    console.log('Firebase initialized securely.');
+  } catch (error) {
+    console.error('Firebase Init Failed:', error);
+  }
 };
 
-// ── INITIALIZE ────────────────────────────────
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
 // ── GOOGLE SIGN IN ────────────────────────────
-const googleProvider = new firebase.auth.GoogleAuthProvider();
-
 window.signInWithGoogle = async () => {
+  if (!auth) return;
+  const googleProvider = new firebase.auth.GoogleAuthProvider();
   try {
     const result = await auth.signInWithPopup(googleProvider);
     const user = result.user;
@@ -42,29 +47,29 @@ window.signInWithGoogle = async () => {
 };
 
 window.signOut = async () => {
-  await auth.signOut();
+  if (auth) await auth.signOut();
 };
 
 // ── AUTH STATE OBSERVER ───────────────────────
-auth.onAuthStateChanged((user) => {
-  const loginBtn = document.getElementById('login-btn');
-  const userMenu = document.getElementById('user-menu');
-  
-  if (user) {
-    // Show user avatar + name in nav
-    if (loginBtn) loginBtn.style.display = 'none';
-    if (userMenu) {
-      userMenu.style.display = 'flex';
-      document.getElementById('user-name').textContent = user.displayName?.split(' ')[0] || 'User';
-      document.getElementById('user-avatar').src = user.photoURL || '';
+const setupAuthListeners = () => {
+  auth.onAuthStateChanged((user) => {
+    const loginBtn = document.getElementById('login-btn');
+    const userMenu = document.getElementById('user-menu');
+    
+    if (user) {
+      if (loginBtn) loginBtn.style.display = 'none';
+      if (userMenu) {
+        userMenu.style.display = 'flex';
+        document.getElementById('user-name').textContent = user.displayName?.split(' ')[0] || 'User';
+        document.getElementById('user-avatar').src = user.photoURL || '';
+      }
+      logSession(user.uid);
+    } else {
+      if (loginBtn) loginBtn.style.display = 'flex';
+      if (userMenu) userMenu.style.display = 'none';
     }
-    // Log session to Firestore
-    logSession(user.uid);
-  } else {
-    if (loginBtn) loginBtn.style.display = 'flex';
-    if (userMenu) userMenu.style.display = 'none';
-  }
-});
+  });
+};
 
 // ── FIRESTORE: LOG SESSION ────────────────────
 const logSession = async (userId) => {
@@ -79,6 +84,7 @@ const logSession = async (userId) => {
 
 // ── FIRESTORE: LOG AI QUERY ───────────────────
 window.logQueryToFirestore = async (query, response) => {
+  if (!db) return;
   const user = auth.currentUser;
   try {
     await db.collection('AIQueries').add({
@@ -92,6 +98,7 @@ window.logQueryToFirestore = async (query, response) => {
 
 // ── FIRESTORE: LOG FACT CHECK ─────────────────
 window.logFactCheckToFirestore = async (content, verdict) => {
+  if (!db) return;
   const user = auth.currentUser;
   try {
     await db.collection('FactChecks').add({
@@ -102,3 +109,6 @@ window.logFactCheckToFirestore = async (content, verdict) => {
     });
   } catch (e) {}
 };
+
+// Start initialization
+initFirebase();

@@ -8,10 +8,13 @@ let auth, db;
 // ── INITIALIZE (Securely) ─────────────────────
 const initFirebase = async () => {
   try {
-    const res = await fetch('/api/config/firebase');
-    const firebaseConfig = await res.json();
+    const res = await fetch('/api/config/keys');
+    const config = await res.json();
+    
+    // Set global Maps key
+    window.googleMapsKey = config.googleMapsKey;
 
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(config.firebase);
     auth = firebase.auth();
     db = firebase.firestore();
 

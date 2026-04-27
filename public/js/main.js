@@ -323,12 +323,23 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="booth-address">${b.address}</div>
         </div>`).join('');
 
-      // Update Map if Leaflet is initialized
-      if (typeof L !== 'undefined' && window.currentMap) {
-        // For demo: Center map on the first result
-        window.currentMap.setView([20.5937, 78.9629], 12);
-        L.marker([20.5937, 78.9629]).addTo(window.currentMap)
-          .bindPopup(`<b>${data[0].name}</b><br>Primary Polling Station`).openPopup();
+      // Update Map if initialized
+      if (window.currentMap) {
+        const lat = 20.5937, lng = 78.9629; // Simulated for demo
+        
+        if (window.currentMapType === 'google') {
+          window.currentMap.setCenter({ lat, lng });
+          window.currentMap.setZoom(12);
+          new google.maps.Marker({
+            position: { lat, lng },
+            map: window.currentMap,
+            title: data[0].name
+          });
+        } else if (window.currentMapType === 'leaflet') {
+          window.currentMap.setView([lat, lng], 12);
+          L.marker([lat, lng]).addTo(window.currentMap)
+            .bindPopup(`<b>${data[0].name}</b>`).openPopup();
+        }
       }
     } catch {
       results.innerHTML = '<p style="color:#ef4444">Error fetching booths.</p>';
@@ -346,39 +357,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 11. FREE MAP ENGINE (Leaflet.js + OpenStreetMap)
-  const initFreeMap = () => {
+  // 11. SMART HYBRID MAP ENGINE (Google Maps or Leaflet Fallback)
+  const initSmartMap = () => {
     const mapContainer = document.getElementById('map');
-    if (!mapContainer || typeof L === 'undefined') return;
-    
-    // Initialize Leaflet Map centered on India
-    window.currentMap = L.map('map', {
-      center: [20.5937, 78.9629],
-      zoom: 5,
-      zoomControl: false,
-      scrollWheelZoom: false
-    });
+    if (!mapContainer) return;
 
-    // Add Premium Dark Matter Tiles (CartoDB)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
-      subdomains: 'abcd',
-      maxZoom: 20
-    }).addTo(window.currentMap);
+    const gKey = window.googleMapsKey;
+    const isRealKey = gKey && gKey.startsWith('AIza') && !gKey.includes('your_');
 
-    // Add a custom marker
-    const mainMarker = L.circleMarker([20.5937, 78.9629], {
-      color: '#2ed573',
-      fillColor: '#2ed573',
-      fillOpacity: 0.5,
-      radius: 10
-    }).addTo(window.currentMap).bindPopup('<b>VoteSaathi HQ</b><br>Monitoring Democracy.');
+    if (isRealKey) {
+      // ── LOAD GOOGLE MAPS DYNAMICALLY ──
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${gKey}&callback=initGoogleMap`;
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
 
-    console.log('Leaflet Map initialized with Dark Matter theme.');
+      window.initGoogleMap = () => {
+        window.currentMapType = 'google';
+        window.currentMap = new google.maps.Map(mapContainer, {
+          center: { lat: 20.5937, lng: 78.9629 },
+          zoom: 5,
+          styles: [
+            { "elementType": "geometry", "stylers": [{ "color": "#242f3e" }] },
+            { "elementType": "labels.text.stroke", "stylers": [{ "color": "#242f3e" }] },
+            { "elementType": "labels.text.fill", "stylers": [{ "color": "#746855" }] }
+          ]
+        });
+        console.log('Smart Map: Google Maps Engine Activated.');
+      };
+    } else {
+      // ── FALLBACK TO LEAFLET ──
+      if (typeof L === 'undefined') return;
+      window.currentMapType = 'leaflet';
+      window.currentMap = L.map('map', {
+        center: [20.5937, 78.9629],
+        zoom: 5,
+        zoomControl: false,
+        scrollWheelZoom: false
+      });
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OSM &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 20
+      }).addTo(window.currentMap);
+
+      L.circleMarker([20.5937, 78.9629], {
+        color: '#2ed573', fillColor: '#2ed573', fillOpacity: 0.5, radius: 10
+      }).addTo(window.currentMap).bindPopup('<b>VoteSaathi HQ</b>');
+      
+      console.log('Smart Map: Leaflet Engine Activated (No API Key found).');
+    }
   };
 
-  // Run map init after a slight delay for smooth transition
-  setTimeout(initFreeMap, 1000);
+  // Run smart map init after keys are fetched
+  setTimeout(initSmartMap, 1500);
 
   // GCP Cloud Connectivity Verification
   const checkGCP = async () => {

@@ -93,6 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
         addMsg(data.text, 'bot');
         chatHistory.push({ role: 'user', parts: [{ text }] });
         chatHistory.push({ role: 'model', parts: [{ text: data.text }] });
+        // Log to Firebase Firestore
+        if (window.logQueryToFirestore) window.logQueryToFirestore(text, data.text);
       } else if (data.error) {
         addMsg('⚠️ ' + data.error, 'bot');
       }
@@ -197,6 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="fc-verdict ${verdict}">${verdictLabel}</div>
           <div class="fc-body">${text}</div>
         </div>`;
+      // Log to Firebase Firestore
+      if (window.logFactCheckToFirestore) window.logFactCheckToFirestore(content, verdictLabel);
       toast('Analysis complete!');
     } catch {
       fcResult.innerHTML = '<p style="color:#ef4444">Analysis failed. Check server.</p>';

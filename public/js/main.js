@@ -322,6 +322,14 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="booth-name">${b.name}</div>
           <div class="booth-address">${b.address}</div>
         </div>`).join('');
+
+      // Update Map if Leaflet is initialized
+      if (typeof L !== 'undefined' && window.currentMap) {
+        // For demo: Center map on the first result
+        window.currentMap.setView([20.5937, 78.9629], 12);
+        L.marker([20.5937, 78.9629]).addTo(window.currentMap)
+          .bindPopup(`<b>${data[0].name}</b><br>Primary Polling Station`).openPopup();
+      }
     } catch {
       results.innerHTML = '<p style="color:#ef4444">Error fetching booths.</p>';
     }
@@ -338,23 +346,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 11. GOOGLE SERVICES (Targeting 90%+ Google Services Score)
-  window.initMap = () => {
+  // 11. FREE MAP ENGINE (Leaflet.js + OpenStreetMap)
+  const initFreeMap = () => {
     const mapContainer = document.getElementById('map');
-    if (!mapContainer) return;
+    if (!mapContainer || typeof L === 'undefined') return;
     
-    // Create actual Google Map instance
-    const map = new google.maps.Map(mapContainer, {
-      center: { lat: 20.5937, lng: 78.9629 }, // India
+    // Initialize Leaflet Map centered on India
+    window.currentMap = L.map('map', {
+      center: [20.5937, 78.9629],
       zoom: 5,
-      styles: [
-        { "elementType": "geometry", "stylers": [{ "color": "#242f3e" }] },
-        { "elementType": "labels.text.stroke", "stylers": [{ "color": "#242f3e" }] },
-        { "elementType": "labels.text.fill", "stylers": [{ "color": "#746855" }] }
-      ]
+      zoomControl: false,
+      scrollWheelZoom: false
     });
-    console.log('Google Maps API initialized successfully.');
+
+    // Add Premium Dark Matter Tiles (CartoDB)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      subdomains: 'abcd',
+      maxZoom: 20
+    }).addTo(window.currentMap);
+
+    // Add a custom marker
+    const mainMarker = L.circleMarker([20.5937, 78.9629], {
+      color: '#2ed573',
+      fillColor: '#2ed573',
+      fillOpacity: 0.5,
+      radius: 10
+    }).addTo(window.currentMap).bindPopup('<b>VoteSaathi HQ</b><br>Monitoring Democracy.');
+
+    console.log('Leaflet Map initialized with Dark Matter theme.');
   };
+
+  // Run map init after a slight delay for smooth transition
+  setTimeout(initFreeMap, 1000);
 
   // GCP Cloud Connectivity Verification
   const checkGCP = async () => {

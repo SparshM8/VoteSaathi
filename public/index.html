@@ -35,6 +35,7 @@
 
   <!-- Icons & AOS -->
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/aos-override.css" />
 </head>
@@ -346,6 +347,12 @@
           </div>
           <div class="booth-results" id="booth-results"></div>
         </div>
+        <div class="booth-map-wrap">
+          <div id="map"></div>
+          <div class="map-overlay">
+            <span class="map-status">Live Civic Map</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -425,8 +432,8 @@
   <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
-  <!-- Google Maps SDK (Targeting Google Services Score) -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_MAPS_API_KEY&callback=initMap"></script>
+  <!-- Free Open-Source Map Engine -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   
   <script src="js/main.js"></script>
   <script src="js/firebase.js"></script>

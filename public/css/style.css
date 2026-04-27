@@ -199,14 +199,26 @@ img{max-width:100%}
 .tl-loading{color:var(--dim);text-align:center;padding:2rem}
 
 /* ── BOOTH LOCATOR ───────────────────────────────────── */
-.booth-shell{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:2.5rem;max-width:700px;margin:0 auto}
-.booth-desc{color:var(--dim);margin-bottom:1.5rem}
+.booth-shell{background:var(--surface);border:1px solid var(--border);border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;min-height:450px}
+.booth-search{padding:2.5rem;display:flex;flex-direction:column}
+.booth-desc{color:var(--dim);margin-bottom:1.5rem;font-size:.9rem;line-height:1.6}
 .booth-input-row{display:flex;gap:.75rem;margin-bottom:1.5rem}
 .booth-input-row .tool-input{margin-bottom:0;flex:1}
-.booth-results{display:flex;flex-direction:column;gap:.75rem}
-.booth-card{padding:1rem 1.25rem;background:var(--card);border:1px solid var(--border);border-radius:12px}
-.booth-name{font-weight:700;margin-bottom:.25rem}
-.booth-address{font-size:.82rem;color:var(--dim)}
+.booth-results{display:flex;flex-direction:column;gap:.75rem;max-height:200px;overflow-y:auto}
+.booth-card{padding:1rem 1.25rem;background:var(--card);border:1px solid var(--border);border-radius:12px;animation:fadeIn .3s var(--ease)}
+.booth-name{font-weight:700;margin-bottom:.25rem;font-size:.9rem}
+.booth-address{font-size:.78rem;color:var(--dim)}
+.booth-map-wrap{position:relative;background:#0a0a0c;border-left:1px solid var(--border)}
+#map{height:100%;width:100%}
+.map-overlay{position:absolute;top:1rem;right:1rem;z-index:1000}
+.map-status{background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);padding:6px 14px;border-radius:100px;font-size:10px;font-weight:700;color:var(--primary);border:1px solid rgba(46,213,115,0.3);text-transform:uppercase;letter-spacing:1px}
+
+/* Leaflet Custom Overrides */
+.leaflet-container{background:#0a0a0c !important}
+.leaflet-tile{filter:grayscale(100%) invert(95%) contrast(85%) !important}
+.leaflet-control-attribution{background:transparent !important;color:rgba(255,255,255,0.1) !important;font-size:9px !important}
+.leaflet-control-attribution a{color:rgba(255,255,255,0.2) !important}
+.leaflet-bar{border:none !important;box-shadow:none !important}
 
 /* ── FAQ ─────────────────────────────────────────────── */
 .faq-list{display:flex;flex-direction:column;gap:.75rem}
@@ -256,6 +268,8 @@ img{max-width:100%}
   .analytics-sidebar{flex-direction:row}
   .fact-checker-shell{grid-template-columns:1fr}
   .fc-input-side{border-right:none;border-bottom:1px solid var(--border)}
+  .booth-shell{grid-template-columns:1fr}
+  .booth-map-wrap{border-left:none;border-top:1px solid var(--border);height:300px}
 }
 @media(max-width:768px){
   .bento{grid-template-columns:1fr}

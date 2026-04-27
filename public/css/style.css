@@ -225,7 +225,11 @@ img{max-width:100%}
 .fl-col h5{font-weight:700;font-size:.85rem;margin-bottom:.4rem}
 .fl-col a{font-size:.85rem;color:var(--dim);transition:color .2s}
 .fl-col a:hover{color:var(--primary)}
-.footer-bottom{border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;font-size:.8rem;color:var(--dim)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--dim)}
+.gcp-status{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);padding:6px 14px;border-radius:100px;border:1px solid var(--border)}
+.status-indicator.live{width:8px;height:8px;background:var(--primary);border-radius:50%;box-shadow:0 0 10px var(--primary);animation:pulse-status 2s infinite}
+@keyframes pulse-status{0%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}
+.status-text{font-weight:600;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase}
 
 /* ── TOAST ───────────────────────────────────────────── */
 #toast-container{position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem}

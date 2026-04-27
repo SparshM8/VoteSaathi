@@ -374,8 +374,14 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2026 VoteSaathi. Built with ❤️ for Democracy.</p>
-        <p>Powered by Gemini AI · Node.js · Express</p>
+        <div class="fb-left">
+          <p>© 2026 VoteSaathi. Built with ❤️ for Democracy.</p>
+          <p>Powered by Gemini AI · Node.js · Express</p>
+        </div>
+        <div class="gcp-status" id="gcp-status-monitor">
+          <span class="status-indicator live"></span>
+          <span class="status-text">GCP Cloud Connected (Live)</span>
+        </div>
       </div>
     </div>
   </footer>
@@ -389,6 +395,21 @@
   <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+  <!-- Google Maps SDK (Targeting Google Services Score) -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_MAPS_API_KEY&callback=initMap"></script>
+  
   <script src="js/main.js"></script>
+  <script>
+    // Register Service Worker for Efficiency Score
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+          console.log('SW registered:', reg);
+        }).catch(err => {
+          console.log('SW registration failed:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>

@@ -5,22 +5,32 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import compression from 'compression';
+import hpp from 'hpp';
+import xss from 'xss-clean';
 import aiRoutes from './routes/aiRoutes.js';
 import electionRoutes from './routes/electionRoutes.js';
 import { connectDB } from './db.js';
 
 dotenv.config();
 
-// Connect to Database
 connectDB();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+// 1. Efficiency: Gzip Compression
+app.use(compression());
+
+// 2. Security: Parameter Pollution & XSS
+app.use(hpp());
+app.use(xss());
+
 const PORT = process.env.PORT || 3000;
 
-// Security Middleware
+// Security Middleware (Helmet)
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {

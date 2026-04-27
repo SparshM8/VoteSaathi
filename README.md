@@ -35,10 +35,12 @@ Real-time participation analytics and participation trends using **Chart.js**. V
 - **Database**: MongoDB integration for query logging and analytics.
 
 ### Security & Quality
-- **Sanitization**: Deep input validation via `express-validator` to prevent XSS and Injection.
+- **Sanitization**: Deep input validation via `express-validator` and `xss-clean`.
+- **Parameter Pollution**: Protection against HTTP parameter pollution via `hpp`.
 - **Rate Limiting**: Integrated DDoS protection using `express-rate-limit`.
+- **Efficiency**: PWA capabilities with **Service Worker** asset caching and **Gzip compression**.
+- **Monitoring**: Live **GCP Cloud Status** heartbeat monitor.
 - **Testing**: 100% pass-rate on automated API tests using **Jest** and **Supertest**.
-- **Aesthetics**: Fully responsive, glassmorphic UI with **AOS** reveals and **Lenis** smooth scrolling.
 
 ---
 

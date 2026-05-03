@@ -35,12 +35,14 @@ Real-time participation analytics and participation trends using **Chart.js**. V
 - **Database**: MongoDB integration for query logging and analytics.
 
 ### Security & Quality
-- **Sanitization**: Deep input validation via `express-validator` and `xss-clean`.
+- **Input Validation**: Deep input validation and sanitization via `express-validator` and custom XSS protection.
 - **Parameter Pollution**: Protection against HTTP parameter pollution via `hpp`.
-- **Rate Limiting**: Integrated DDoS protection using `express-rate-limit`.
-- **Efficiency**: PWA capabilities with **Service Worker** asset caching and **Gzip compression**.
+- **Rate Limiting**: Tiered DDoS protection — 100 req/15min for general API, 20 req/15min for AI endpoints.
+- **Security Headers**: Full Helmet.js suite with custom CSP, HSTS (`max-age=63072000`), `X-Frame-Options`, and `Permissions-Policy`.
+- **CORS**: Strict origin whitelist with dynamic validation for production environments.
+- **Efficiency**: PWA capabilities with **Service Worker v2** (cache-first with dynamic caching + stale cleanup) and **Gzip compression**.
 - **Monitoring**: Live **GCP Cloud Status** heartbeat monitor.
-- **Testing**: 100% pass-rate on automated API tests using **Jest** and **Supertest**.
+- **Testing**: 9 automated API tests using **Jest** and **Supertest** — covering election endpoints, AI validation, security headers, CORS, and production config protection.
 
 ---
 
@@ -64,11 +66,17 @@ Real-time participation analytics and participation trends using **Chart.js**. V
    ```
 
 3. **Configure Environment**
-   Create a `.env` file in the root directory:
+   Create a `.env` file in the root directory (see `.env.example`):
    ```env
    PORT=3000
    GEMINI_API_KEY=your_gemini_key_here
-   MONGO_URI=your_mongodb_uri_here
+   MONGODB_URI=your_mongodb_uri_here
+   FIREBASE_API_KEY=your_firebase_api_key
+   FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+   FIREBASE_PROJECT_ID=your_project_id
+   FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+   FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   FIREBASE_APP_ID=your_app_id
    ```
 
 4. **Run the Application**

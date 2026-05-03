@@ -82,11 +82,25 @@ app.use((req, res, next) => {
   next();
 });
 
+// General API rate limiter (100 req / 15 min)
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' }
 });
 app.use('/api/', limiter);
+
+// Stricter AI endpoint limiter (20 req / 15 min)
+const aiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'AI rate limit exceeded. Please wait before sending more requests.' }
+});
+app.use('/api/ai/', aiLimiter);
 
 app.use(express.static(path.join(__dirname, '../public')));
 

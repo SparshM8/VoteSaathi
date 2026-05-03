@@ -98,9 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (data.error) {
         addMsg('⚠️ ' + data.error, 'bot');
       }
-    } catch {
+    } catch (err) {
       loader.remove();
-      addMsg('Network error. Please check the server.', 'bot');
+      const errMsg = err.message || 'Network error. Please check the server.';
+      addMsg('⚠️ ' + errMsg, 'bot');
+      toast(errMsg, 'error');
     }
   };
 
@@ -202,8 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Log to Firebase Firestore
       if (window.logFactCheckToFirestore) window.logFactCheckToFirestore(content, verdictLabel);
       toast('Analysis complete!');
-    } catch {
-      fcResult.innerHTML = '<p style="color:#ef4444">Analysis failed. Check server.</p>';
+    } catch (err) {
+      fcResult.innerHTML = `<p style="color:#ef4444">Analysis failed: ${err.message || 'Check server connection.'}</p>`;
     } finally {
       analyzeBtn.disabled = false;
       analyzeText.textContent = 'Analyze Now';
@@ -350,11 +352,23 @@ document.addEventListener('DOMContentLoaded', () => {
   //  FAQ ACCORDION
   // ─────────────────────────────────────────────────────
   document.querySelectorAll('.faq-item').forEach(item => {
-    item.querySelector('.faq-q').addEventListener('click', () => {
+    const btn = item.querySelector('.faq-q');
+    btn.addEventListener('click', () => {
       const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-      if (!isOpen) item.classList.add('open');
+      
+      // Close others
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
     });
+    // Set initial state
+    btn.setAttribute('aria-expanded', 'false');
   });
 
   // 11. SMART HYBRID MAP ENGINE (Google Maps or Leaflet Fallback)

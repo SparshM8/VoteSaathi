@@ -17,6 +17,10 @@ img{max-width:100%}
 .narrow{max-width:760px}
 .section{padding:100px 0}
 .dim{color:var(--dim)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
+.skip-link{position:absolute;top:-100px;left:2rem;background:var(--primary);color:#000;padding:12px 24px;border-radius:10px;font-weight:700;z-index:9999;transition:top .3s}
+.skip-link:focus{top:1rem}
+*:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
 
 /* ── NAV ─────────────────────────────────────────────── */
 #main-nav{position:fixed;top:0;width:100%;z-index:999;padding:0 2rem;transition:background .3s}

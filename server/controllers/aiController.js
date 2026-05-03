@@ -25,16 +25,38 @@ export const getChatResponse = async (req, res) => {
       return res.status(500).json({ error: 'Gemini API Key not configured.' });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-1.5-flash',
+      safetySettings: [
+        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+      ]
+    });
 
     const chat = model.startChat({
       history: history || [],
       generationConfig: {
-        maxOutputTokens: 500,
+        maxOutputTokens: 800,
+        temperature: 0.7,
       },
     });
 
-    const prompt = `You are "VoteSaathi", a smart civic mentor. Your goal is to educate users about the election process, voter rights, and civic engagement. Be encouraging, clear, and simplify complex terms for first-time voters. User says: ${message}`;
+    const prompt = `System: You are "VoteSaathi", an expert AI civic mentor dedicated to empowering Indian citizens. 
+    Your mission is to provide accurate, unbiased, and easy-to-understand information about:
+    1. The voter registration process and eligibility.
+    2. How to find polling stations and use EVM/VVPAT machines.
+    3. Understanding the roles of various elected officials (MP, MLA, Corporator).
+    4. Explaining democratic concepts like NOTA, First-Past-The-Post, and Model Code of Conduct.
+    
+    Guidelines:
+    - Be non-partisan: Never support or oppose any specific political party or candidate.
+    - Be encouraging: Motivate citizens to participate in the democratic process.
+    - Be concise but thorough: Use bullet points for steps.
+    - If a query is outside the scope of Indian elections or civic duties, politely redirect the user.
+    
+    User Query: ${message}`;
 
     const result = await chat.sendMessage(prompt);
     const response = await result.response;
@@ -76,15 +98,27 @@ export const detectFakeNews = async (req, res) => {
       return res.status(500).json({ error: 'Gemini API Key not configured.' });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-1.5-flash',
+      safetySettings: [
+        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+      ]
+    });
 
-    const prompt = `Act as a fact-checker and civic expert. Analyze the following news content related to elections and determine its credibility. 
-    You MUST classify the news into one of these three categories:
-    1. Likely True
-    2. Suspicious
-    3. Fake
+    const prompt = `System: You are an expert fact-checker specializing in Indian elections and civic information. 
+    Analyze the provided news content or claim for credibility.
     
-    Provide your verdict followed by a brief, clear explanation. Use a friendly but professional tone.
+    Response Format:
+    Verdict: [Likely True / Suspicious / Fake]
+    Reasoning: [Provide a brief, clear explanation of why the content is classified this way. Mention official sources if applicable, like the Election Commission of India (ECI).]
+    
+    Guidelines:
+    - If the content is true, confirm it with facts.
+    - If it's fake or suspicious, explain the misinformation clearly.
+    - Maintain a neutral, professional, and helpful tone.
     
     News Content: "${newsContent}"`;
 

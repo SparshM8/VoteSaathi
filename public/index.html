@@ -41,6 +41,7 @@
   <link rel="stylesheet" href="css/aos-override.css" />
 </head>
 <body>
++  <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ═══════════════════════════════════ NAV ═══════════════════════════════════ -->
   <nav id="main-nav">
@@ -68,6 +69,8 @@
       </div>
     </div>
   </nav>
+
+  <main id="main-content">
 
   <!-- ═══════════════════════════════════ HERO ═══════════════════════════════════ -->
   <section id="home" class="hero">
@@ -176,7 +179,7 @@
           </div>
           <div class="chat-model-tag">Gemini 1.5 Flash</div>
         </div>
-        <div class="chat-messages" id="chat-messages">
+        <div class="chat-messages" id="chat-messages" aria-live="polite">
           <div class="msg bot-msg-bubble">
             <div class="msg-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></div>
             <div class="msg-text"><span id="typed-welcome"></span></div>
@@ -189,6 +192,7 @@
           <button class="chip" data-prompt="How does the Indian election process work?">Election process</button>
         </div>
         <div class="chat-input-bar">
+          <label for="chat-input" class="sr-only">Ask your civic question</label>
           <input type="text" id="chat-input" placeholder="Ask your civic question here..." autocomplete="off" />
           <button id="send-btn" class="send-btn" aria-label="Send">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -241,7 +245,7 @@
       <h2 class="section-title" data-aos="fade-up" data-aos-delay="50">Stop misinformation<br /><span class="dim">before it spreads.</span></h2>
       <div class="fact-checker-shell" data-aos="fade-up" data-aos-delay="100">
         <div class="fc-input-side">
-          <label class="fc-label">Paste the claim or news snippet below</label>
+          <label for="news-content" class="fc-label">Paste the claim or news snippet below</label>
           <textarea id="news-content" placeholder="e.g. Voting is mandatory in India and citizens who don't vote will be fined..."></textarea>
           <div class="fc-actions">
             <span class="fc-hint">Powered by Gemini AI</span>
@@ -251,7 +255,7 @@
             </button>
           </div>
         </div>
-        <div class="fc-result-side" id="fc-result">
+        <div class="fc-result-side" id="fc-result" aria-live="assertive">
           <div class="fc-empty">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             <p>Your analysis result will appear here.</p>
@@ -280,7 +284,7 @@
               <span class="wp-label" id="wp-label">Step 1 of 2</span>
             </div>
             <div class="wizard-step active" id="w-step-1">
-              <p class="step-q">What is your age?</p>
+              <label for="age" class="step-q">What is your age?</label>
               <input type="number" id="age" placeholder="Enter your age" min="1" max="120" class="tool-input" />
             </div>
             <div class="wizard-step" id="w-step-2">
@@ -307,6 +311,7 @@
           <div class="search-wrap">
             <div class="search-box">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <label for="constituency-input" class="sr-only">Search constituency</label>
               <input type="text" id="constituency-input" placeholder="Search constituency (e.g. Mumbai, Delhi...)" class="search-input" />
             </div>
             <button id="search-candidates-btn" class="btn-accent-sm">Search</button>
@@ -340,6 +345,7 @@
         <div class="booth-search">
           <p class="booth-desc">Enter your area's PIN code to instantly find all nearby polling booths.</p>
           <div class="booth-input-row">
+            <label for="booth-zip" class="sr-only">Enter PIN code</label>
             <input type="text" id="booth-zip" placeholder="Enter PIN code (e.g. 400001)" class="tool-input" maxlength="6" />
             <button id="find-booth-btn" class="btn-primary-lg">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -383,6 +389,8 @@
       </div>
     </div>
   </section>
+
+  </main>
 
   <!-- ═══════════════════════════════════ FOOTER ═══════════════════════════════════ -->
   <footer class="footer">
